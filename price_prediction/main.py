@@ -13,6 +13,8 @@ def apply_hypothesis(mileage: int) -> float:
     return hypothesis
 
 def calculate_price(mileage: int) -> float:
+
+    # Apply the hypothesis to the received mileage
     car_price = apply_hypothesis(mileage)
 
     return car_price
