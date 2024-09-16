@@ -47,7 +47,12 @@ def read_dataset(file_path: str) -> str:
 #     """Perform linear regression on the dataset""" 
 #     theta0 
 #     for element in dataset:
-    
+
+def predict(X, weights, bias=0):
+    print('nani')
+    y_pred = np.dot(X, weights) + bias
+    return y_pred
+
 
 def main():
 
@@ -76,15 +81,25 @@ def main():
 
     batch_size = scaled_data.shape[0]
 
-    print(batch_size)
+    print('nani 1')
+    weights = np.zeros(batch_size)
+    print(f'weights is {weights}')
 
-    epochs = 10
+    pred = predict(independent_var, weights)
 
-    for epoch in range(1, epochs + 1):
-        print('yo')
-        for b in range(0, batch_size, batch_size):
-            print(f'b: {b}')
-            print(epoch)
+    print(f'pred is {pred}')
+
+
+
+    # print(batch_size)
+
+    # epochs = 10
+
+    # for epoch in range(1, epochs + 1):
+    #     print('yo')
+    #     for b in range(0, batch_size, batch_size):
+    #         print(f'b: {b}')
+    #         print(epoch)
 
     # print(dataset)
     # bgd = BatchGradientDescent(dataset)
