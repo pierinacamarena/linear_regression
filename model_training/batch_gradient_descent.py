@@ -1,46 +1,31 @@
 from typing import Optional
 class BatchGradientDescent:
 
-    def __init__(self, dataset : str, ):
+    def __init__(self, features , target, batch_size, epochs = 100):
         self.learning_rate = 0.01
-        self.theta0 = 0
-        self.theta1 = 0
-        self.dataset = dataset[1:]
+        self.bias = 0
+        self.weight = 0
+        self.features = features
+        self.target = target
+        self.batch_size = batch_size
+        self.epochs = epochs
 
 
-    def linear_regression(self) -> None :
-        m = len(self.dataset)
-        # 4th entry
-        data = self.dataset[3]
-        price, mileage = self.get_price_and_mileage(data)
-        print(f'price is: {price}')
-        print(f'mileage is: {mileage}')
-        # for data in self.dataset:
-        #     price, mileage = self.get_price_and_mileage(data)
-        #     print(f'data is {data}')
-        #     print(f'price is: {price}')
-        #     print(f'mileage is: {mileage}')
-        #     estimated_price = self.apply_hypothesis(mileage)
+    def fit(self) -> None :
 
-    def apply_hypothesis(self, mileage: int) -> float:
-    
-        # Linear equation
-        hypothesis = self.theta0 + (self.theta1 * mileage)
+        print(f'features is: {self.features}')
+        print(f'target is: {self.target}')
+        for _ in range(self.epochs):
+            y_predicted = [self.weight * x + self.bias for x in self.features]
 
-        return hypothesis
-    
-    # def calculate_value_theta(self, price: int, mileage: Optional[int] = None) -> float:
-
-    def calculate_sum(self, entry: int) -> any:
-        sum = 0
-        for i in range(entry):
-            sum += 1
-
-    # def calculate_value_theta0(self, price: int, estimated_price: float, m: int) -> float:
-    #     self.theta0 = self.learning_rate * 1/m 
+            # Compute gradients
+            dw = sum((y_predicted[i] - self.target[i]) * self.features[i] for i in range(self.batch_size)) / self.batch_size
+            db = sum(y_predicted[i] - self.target[i] for i in range(self.batch_size)) / self.batch_size
 
 
-    def get_price_and_mileage(self, dataset_line: str) -> (int, int):
-        result = tuple(map(int, dataset_line.strip().split(',')))
-        return result
+            # Update parameters
+            self.weight -= self.learning_rate * dw
+            self.bias -= self.learning_rate * db
 
+    def predict(self, X):
+        return [self.weight * x + self.bias for x in X]

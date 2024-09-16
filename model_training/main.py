@@ -3,25 +3,14 @@ import pandas as pd
 import numpy as np
 import os
 from sklearn.preprocessing import StandardScaler
-
 from batch_gradient_descent import BatchGradientDescent
 
-def standard_scale_data(df: pd.DataFrame) -> pd.DataFrame:
+def standard_scale_data(data: np.array) -> tuple:
     scaler = StandardScaler()
+    scaled_data = scaler.fit_transform(data.reshape(-1, 1)).flatten()
+    return scaled_data, scaler
 
-    numeric_columns = df.select_dtypes(include=[np.number]).columns
-
-    scaled_data = scaler.fit_transform(df[numeric_columns])
-
-    df_scaled = pd.DataFrame(scaled_data, columns=numeric_columns)
-
-    return df_scaled
-
-
-def read_dataset(file_path: str) -> str:
-    """
-    Read dataset
-    """
+def read_dataset(file_path: str) -> pd.DataFrame:
     try:
         if not os.path.exists(file_path):
             raise FileNotFoundError(f"File not found: {file_path}")
@@ -30,86 +19,57 @@ def read_dataset(file_path: str) -> str:
     except FileNotFoundError as e:
         print(f"Error: File not found: {file_path}")
         return None
-    
     except pd.errors.EmptyDataError:
         print(f"Error: No data in file: {file_path}")
         return None
-    
     except pd.errors.ParserError as e:
         print(f"Error: Error parsing CSV file: {file_path}. Error: {str(e)}")
         return None
-    
     except Exception as e:
         print(f"Error: Unexpected error reading file {file_path}: {str(e)}")
         return None
 
-# def linear_regression(dataset: str) -> any:
-#     """Perform linear regression on the dataset""" 
-#     theta0 
-#     for element in dataset:
-
-def predict(X, weights, bias=0):
-    print('nani')
-    y_pred = np.dot(X, weights) + bias
-    return y_pred
-
-
 def main():
-
-    # Parse input arguments 
-    parser = argparse.ArgumentParser(description="Receive mileage of a car and dataset path")
-    parser.add_argument('mileage', type=int, help="The mileage for a car")
+    parser = argparse.ArgumentParser(description="Train a linear regression model on car data")
     parser.add_argument('file_path', type=str, help="The filepath for the training dataset")
-    
     args = parser.parse_args()
 
-    mileage = args.mileage
-    file_path = args.file_path
-    
     # Read dataset
-    df = read_dataset(file_path)
-    
-    # Scale dataset
-    scaled_data = standard_scale_data(df)
-    print(scaled_data)
+    df = read_dataset(args.file_path)
+    if df is None:
+        return
 
-    independent_var = scaled_data['km']
-    target_var = scaled_data['price']
-    print(f'independent var is {independent_var}')
-    print(f'target var is {target_var}')
+    # Scale features and target separately
+    X = df['km'].values
+    y = df['price'].values
 
+    X_scaled, X_scaler = standard_scale_data(X)
+    y_scaled, y_scaler = standard_scale_data(y)
 
-    batch_size = scaled_data.shape[0]
+    # Train model
+    batch_size = len(X_scaled)
+    bgd = BatchGradientDescent(X_scaled, y_scaled, batch_size, 5000)
 
-    print('nani 1')
-    weights = np.zeros(batch_size)
-    print(f'weights is {weights}')
+    print(f'Weight before fit: {bgd.weight}')
+    print(f'Bias before fit: {bgd.bias}')
 
-    pred = predict(independent_var, weights)
+    bgd.fit()
 
-    print(f'pred is {pred}')
+    print(f'Weight after fit: {bgd.weight}')
+    print(f'Bias after fit: {bgd.bias}')
 
+    # Make predictions
+    scaled_predictions = bgd.predict(X_scaled)
 
+    # Denormalize predictions
+    denormalized_predictions = y_scaler.inverse_transform(np.array(scaled_predictions).reshape(-1, 1)).flatten()
 
-    # print(batch_size)
+    print(f'Denormalized predictions: {denormalized_predictions}')
+    print(f'Type of denormalized predictions: {type(denormalized_predictions)}')
 
-    # epochs = 10
+    # Print some statistics for verification
+    print(f'\nOriginal price range: {y.min()} to {y.max()}')
+    print(f'Predicted price range: {denormalized_predictions.min()} to {denormalized_predictions.max()}')
 
-    # for epoch in range(1, epochs + 1):
-    #     print('yo')
-    #     for b in range(0, batch_size, batch_size):
-    #         print(f'b: {b}')
-    #         print(epoch)
-
-    # print(dataset)
-    # bgd = BatchGradientDescent(dataset)
-    # bgd.linear_regression()
-
-    # print(dataset)
-    # print(f'len of dataset is {len(dataset)}')
-    # i = 0
-    # for element in dataset:
-    #     i = i + 1
-    # print(f'i is {i}')
 if __name__ == "__main__":
     main()
