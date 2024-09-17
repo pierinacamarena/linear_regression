@@ -32,13 +32,8 @@ class BatchGradientDescent:
     def predict(self, mileage):
         return self.weight * mileage + self.bias
     
-    # def mean_squared_error(self, y_true: List[float], y_pred: List[float]) -> float:
-    #     """Calculate the mean squared error."""
-    #     mse = np.mean((np.array(y_true) - np.array(y_pred)) ** 2)
-    #     return mse
+    def mean_squared_error(self, y_true: List[float], y_pred: List[float]) -> float:
 
-    def mean_squared_error(self, y_true, y_pred):
-        
         if len(y_true) != len(y_pred):
             raise ValueError("The lengths of y_true and y_pred must be equal")
         
