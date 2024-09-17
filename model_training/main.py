@@ -20,12 +20,6 @@ def main():
     train_model = args.train_model
     mileage = args.mileage
 
-    # Example of how you might use the arguments
-    print(f"File Path: {args.file_path}")
-    print(f"Mileage: {args.mileage}")
-    print(f"Train: {args.train_model}")
-
-
     # Read dataset
     df = read_dataset(args.file_path)
     if df is None:
