@@ -32,7 +32,23 @@ def read_dataset(file_path: str) -> pd.DataFrame:
 def main():
     parser = argparse.ArgumentParser(description="Train a linear regression model on car data")
     parser.add_argument('file_path', type=str, help="The filepath for the training dataset")
+
+    # Optional argument for mileage with default value of 0
+    parser.add_argument('--mileage', type=int, default=0, help="A mileage to predict a car price (default: 0)")
+    
+    # Optional argument for train with default value of False
+    parser.add_argument('--train_model', type=bool, default=False, help="Enter True if you want to train the model (default: False)")
+    
     args = parser.parse_args()
+    
+    train_model = args.train_model
+    mileage = args.mileage
+
+    # Example of how you might use the arguments
+    print(f"File Path: {args.file_path}")
+    print(f"Mileage: {args.mileage}")
+    print(f"Train: {args.train_model}")
+
 
     # Read dataset
     df = read_dataset(args.file_path)
@@ -53,23 +69,29 @@ def main():
     print(f'Weight before fit: {bgd.weight}')
     print(f'Bias before fit: {bgd.bias}')
 
-    bgd.fit()
+    if train_model:
 
-    print(f'Weight after fit: {bgd.weight}')
-    print(f'Bias after fit: {bgd.bias}')
+        bgd.fit()
 
-    # Make predictions
-    scaled_predictions = bgd.predict(X_scaled)
+        print(f'Weight after fit: {bgd.weight}')
+        print(f'Bias after fit: {bgd.bias}')
 
-    # Denormalize predictions
-    denormalized_predictions = y_scaler.inverse_transform(np.array(scaled_predictions).reshape(-1, 1)).flatten()
+        # Denormalize the weight
+        bgd.weight = (bgd.weight * y_scaler.scale_[0]) / X_scaler.scale_[0]
 
-    print(f'Denormalized predictions: {denormalized_predictions}')
-    print(f'Type of denormalized predictions: {type(denormalized_predictions)}')
+        # Denormalize the bias
+        bgd.bias = y_scaler.mean_[0] + (bgd.bias * y_scaler.scale_[0]) - \
+                            (X_scaler.mean_[0] * bgd.weight)
 
-    # Print some statistics for verification
-    print(f'\nOriginal price range: {y.min()} to {y.max()}')
-    print(f'Predicted price range: {denormalized_predictions.min()} to {denormalized_predictions.max()}')
+        print(f'Denormalized Weight: {bgd.weight}')
+        print(f'Denormalized Bias: {bgd.bias}')
+
+    # Now use the denormalized coefficients for predictions
+    if mileage:
+        # predicted_price = denormalized_weight * mileage + denormalized_bias
+        predicted_price = bgd.predict(mileage)
+        print(f'Predicted Price for mileage {mileage}: {predicted_price}')
+
 
 if __name__ == "__main__":
     main()

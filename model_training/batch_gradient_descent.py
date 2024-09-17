@@ -27,5 +27,8 @@ class BatchGradientDescent:
             self.weight -= self.learning_rate * dw
             self.bias -= self.learning_rate * db
 
-    def predict(self, X):
+    def predictArray(self, X):
         return [self.weight * x + self.bias for x in X]
+
+    def predict(self, mileage):
+        return self.weight * mileage + self.bias
