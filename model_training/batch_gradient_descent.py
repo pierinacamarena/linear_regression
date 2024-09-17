@@ -1,4 +1,6 @@
-from typing import Optional
+from typing import Optional, List
+import numpy as np
+
 class BatchGradientDescent:
 
     def __init__(self, features , target, batch_size, epochs = 100):
@@ -29,3 +31,18 @@ class BatchGradientDescent:
 
     def predict(self, mileage):
         return self.weight * mileage + self.bias
+    
+    # def mean_squared_error(self, y_true: List[float], y_pred: List[float]) -> float:
+    #     """Calculate the mean squared error."""
+    #     mse = np.mean((np.array(y_true) - np.array(y_pred)) ** 2)
+    #     return mse
+
+    def mean_squared_error(self, y_true, y_pred):
+        
+        if len(y_true) != len(y_pred):
+            raise ValueError("The lengths of y_true and y_pred must be equal")
+        
+        n = len(y_true)
+        squared_errors = [(y - y_hat) ** 2 for y, y_hat in zip(y_true, y_pred)]
+        mse = sum(squared_errors) / n
+        return mse

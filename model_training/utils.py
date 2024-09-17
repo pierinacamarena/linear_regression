@@ -3,6 +3,8 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from batch_gradient_descent import BatchGradientDescent
+import matplotlib.pyplot as plt
+
 
 
 def standard_scale_data(data: np.array) -> tuple:
@@ -38,5 +40,20 @@ def denormalize_coefficients(bgd: BatchGradientDescent, X_scaler: StandardScaler
         denormalized_bias = y_scaler.mean_[0] + (bgd.bias * y_scaler.scale_[0]) - \
                             (X_scaler.mean_[0] * denormalized_weight)
 
-
         return (denormalized_weight, denormalized_bias)
+
+def plot_regression_line(X, y, bgd):
+    # Plot the original data points
+    plt.scatter(X, y, color='blue', label='Data Points')
+
+    # Predicted values (regression line)
+    y_pred = bgd.predictArray(X)
+
+    # Plot the regression line
+    plt.plot(X, y_pred, color='red', label='Regression Line')
+
+    plt.xlabel('Mileage (km)')
+    plt.ylabel('Price ($)')
+    plt.title('Car Price Prediction')
+    plt.legend()
+    plt.show()
