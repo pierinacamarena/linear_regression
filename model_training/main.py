@@ -2,7 +2,7 @@ import argparse
 import pandas as pd
 import numpy as np
 from batch_gradient_descent import BatchGradientDescent
-from utils import standard_scale_data, read_dataset, denormalize_coefficients, plot_regression_line
+from utils import standard_scale_data, read_dataset, denormalize_coefficients, plot_regression_line, plot_original_data
 import logger as logger
 log = logger.get_logger()
 
@@ -30,6 +30,9 @@ def main():
     # Scale features and target separately
     X = df['km'].values
     y = df['price'].values
+
+    # Plot the original data before any training
+    plot_original_data(X, y)
 
     X_scaled, X_scaler = standard_scale_data(X)
     y_scaled, y_scaler = standard_scale_data(y)

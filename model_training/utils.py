@@ -57,3 +57,12 @@ def plot_regression_line(X, y, bgd):
     plt.title('Car Price Prediction')
     plt.legend()
     plt.show()
+
+def plot_original_data(X, y):
+    """Plot only the original data points."""
+    plt.scatter(X, y, color='blue', label='Data Points')
+    plt.xlabel('Mileage (km)')
+    plt.ylabel('Price ($)')
+    plt.title('Original Car Data (Mileage vs Price)')
+    plt.legend()
+    plt.show()
