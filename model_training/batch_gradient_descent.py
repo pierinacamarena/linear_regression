@@ -13,8 +13,6 @@ class BatchGradientDescent:
 
     def fit(self) -> None :
 
-        print(f'features is: {self.features}')
-        print(f'target is: {self.target}')
         for _ in range(self.epochs):
             y_predicted = [self.weight * x + self.bias for x in self.features]
 
@@ -22,8 +20,7 @@ class BatchGradientDescent:
             dw = sum((y_predicted[i] - self.target[i]) * self.features[i] for i in range(self.batch_size)) / self.batch_size
             db = sum(y_predicted[i] - self.target[i] for i in range(self.batch_size)) / self.batch_size
 
-
-            # Update parameters
+            # Update coefficients
             self.weight -= self.learning_rate * dw
             self.bias -= self.learning_rate * db
 

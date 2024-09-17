@@ -1,33 +1,9 @@
 import argparse
 import pandas as pd
 import numpy as np
-import os
-from sklearn.preprocessing import StandardScaler
 from batch_gradient_descent import BatchGradientDescent
+from utils import standard_scale_data, read_dataset, denormalize_coefficients
 
-def standard_scale_data(data: np.array) -> tuple:
-    scaler = StandardScaler()
-    scaled_data = scaler.fit_transform(data.reshape(-1, 1)).flatten()
-    return scaled_data, scaler
-
-def read_dataset(file_path: str) -> pd.DataFrame:
-    try:
-        if not os.path.exists(file_path):
-            raise FileNotFoundError(f"File not found: {file_path}")
-        df = pd.read_csv(file_path)
-        return df
-    except FileNotFoundError as e:
-        print(f"Error: File not found: {file_path}")
-        return None
-    except pd.errors.EmptyDataError:
-        print(f"Error: No data in file: {file_path}")
-        return None
-    except pd.errors.ParserError as e:
-        print(f"Error: Error parsing CSV file: {file_path}. Error: {str(e)}")
-        return None
-    except Exception as e:
-        print(f"Error: Unexpected error reading file {file_path}: {str(e)}")
-        return None
 
 def main():
     parser = argparse.ArgumentParser(description="Train a linear regression model on car data")
@@ -76,20 +52,13 @@ def main():
         print(f'Weight after fit: {bgd.weight}')
         print(f'Bias after fit: {bgd.bias}')
 
-        # Denormalize the weight
-        bgd.weight = (bgd.weight * y_scaler.scale_[0]) / X_scaler.scale_[0]
-
-        # Denormalize the bias
-        bgd.bias = y_scaler.mean_[0] + (bgd.bias * y_scaler.scale_[0]) - \
-                            (X_scaler.mean_[0] * bgd.weight)
+        bgd.weight, bgd.bias = denormalize_coefficients(bgd, X_scaler, y_scaler)
 
         print(f'Denormalized Weight: {bgd.weight}')
         print(f'Denormalized Bias: {bgd.bias}')
 
-    # Now use the denormalized coefficients for predictions
     if mileage:
-        # predicted_price = denormalized_weight * mileage + denormalized_bias
-        predicted_price = bgd.predict(mileage)
+        predicted_price = round(bgd.predict(mileage), 2)
         print(f'Predicted Price for mileage {mileage}: {predicted_price}')
 
 
