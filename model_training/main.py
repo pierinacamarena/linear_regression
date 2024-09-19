@@ -2,7 +2,7 @@ import argparse
 import pandas as pd
 import numpy as np
 from batch_gradient_descent import BatchGradientDescent
-from utils import standard_scale_data, read_dataset, denormalize_coefficients, plot_regression_line, plot_original_data
+from utils import standard_scale_data, read_dataset, plot_regression_line, plot_original_data
 import logger as logger
 log = logger.get_logger()
 
@@ -10,8 +10,8 @@ def main():
     parser = argparse.ArgumentParser(description="Train a linear regression model on car data")
     parser.add_argument('file_path', type=str, help="The filepath for the training dataset")
 
-    # Optional argument for mileage with default value of 0
-    parser.add_argument('--mileage', type=int, default=0, help="A mileage to predict a car price (default: 0)")
+    # Optional argument for mileage with default value of None
+    parser.add_argument('--mileage', type=int, default=None, help="A mileage to predict a car price (default: 0)")
     
     # Optional argument for train with default value of False
     parser.add_argument('--train', type=bool, default=False, help="Enter True if you want to train the model (default: False)")
@@ -38,41 +38,29 @@ def main():
     y_scaled, y_scaler = standard_scale_data(y)
 
     # Train model
-    batch_size = len(X_scaled)
-    bgd = BatchGradientDescent(X_scaled, y_scaled, batch_size, 5000)
-    log.trace('Instantiated the Batch Gradient Descent')
-
-    log.info(f'Weight before fit: {bgd.weight}')
-    log.info(f'Bias before fit: {bgd.bias}')
+    log.info('Instanting the Batch Gradient Descent Class')
+    bgd = BatchGradientDescent(X_scaled, y_scaled, len(X_scaled), 5000)
 
     if train_model:
         log.info('Training the model')
-
         bgd.fit()
 
-        log.trace(f'Weight after fit: {bgd.weight}')
-        log.trace(f'Bias after fit: {bgd.bias}')
+        log.info("Calculating model's precision")
+        bgd.calculate_precission()
 
-        # Predict the prices after training
+        log.info("Denormalizing coefficients")
+        bgd.denormalize_coefficients(X_scaler, y_scaler)
 
-        y_pred = bgd.predictArray(X_scaled)
-
-        # Calculate Mean Squared Error (MSE)
-        mse = bgd.mean_squared_error(y_scaled, y_pred)
-        log.trace(f'Mean Squared Error: {mse}')
-
-        bgd.weight, bgd.bias = denormalize_coefficients(bgd, X_scaler, y_scaler)
-
-        log.info(f'Denormalized Weight: {bgd.weight}')
-        log.info(f'Denormalized Bias: {bgd.bias}')
-
-        # Plot the regression line after training
+        log.info("Plotting the regression line")
         plot_regression_line(X, y, bgd)
 
 
-    if mileage:
+    if mileage or mileage == 0:
+        log.info(f"Calculating the price for mileage [{mileage}]")
         predicted_price = round(bgd.predict(mileage), 2)
-        log.trace(f'Predicted Price for mileage {mileage}: {predicted_price}')
+        log.trace(f'''
+        Predicted Price: [{predicted_price}]
+        ''')
 
 
 if __name__ == "__main__":

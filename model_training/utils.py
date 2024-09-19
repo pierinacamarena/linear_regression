@@ -31,16 +31,16 @@ def read_dataset(file_path: str) -> pd.DataFrame:
         print(f"Error: Unexpected error reading file {file_path}: {str(e)}")
         return None
 
-def denormalize_coefficients(bgd: BatchGradientDescent, X_scaler: StandardScaler,  y_scaler: StandardScaler) -> (float, float):
+# def denormalize_coefficients(bgd: BatchGradientDescent, X_scaler: StandardScaler,  y_scaler: StandardScaler) -> (float, float):
     
-        # Denormalize the weight
-        denormalized_weight = (bgd.weight * y_scaler.scale_[0]) / X_scaler.scale_[0]
+#         # Denormalize the weight
+#         denormalized_weight = (bgd.weight * y_scaler.scale_[0]) / X_scaler.scale_[0]
 
-        # Denormalize the bias
-        denormalized_bias = y_scaler.mean_[0] + (bgd.bias * y_scaler.scale_[0]) - \
-                            (X_scaler.mean_[0] * denormalized_weight)
+#         # Denormalize the bias
+#         denormalized_bias = y_scaler.mean_[0] + (bgd.bias * y_scaler.scale_[0]) - \
+#                             (X_scaler.mean_[0] * denormalized_weight)
 
-        return (denormalized_weight, denormalized_bias)
+#         return (denormalized_weight, denormalized_bias)
 
 def plot_regression_line(X, y, bgd):
     # Plot the original data points
