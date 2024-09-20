@@ -72,8 +72,10 @@ class BatchGradientDescent:
         Returns:
             Predicted output value.
         """
-        return self.weight * mileage + self.bias
-
+        prediction = self.weight * mileage + self.bias
+        if prediction < 0:
+            return 0
+        return prediction
 
     def denormalize_coefficients(self, X_scaler: StandardScaler, y_scaler: StandardScaler):
         """
