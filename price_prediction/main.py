@@ -28,6 +28,9 @@ def apply_hypothesis(mileage: int) -> float:
     # Linear equation
     hypothesis = theta0 + (theta1 * mileage)
 
+    if hypothesis < 0:
+        return 0
+
     return hypothesis
 
 
