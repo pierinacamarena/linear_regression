@@ -1,4 +1,5 @@
 import os
+import json
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
@@ -6,6 +7,25 @@ from batch_gradient_descent import BatchGradientDescent
 import matplotlib.pyplot as plt
 import logger as logger
 log = logger.get_logger()
+
+def get_coefficients() -> tuple:
+    """
+    Retrieves the bias (theta0) and weight (theta1) from a JSON file.
+    
+    Returns:
+        tuple: A tuple (theta0, theta1), representing the bias and weight.
+        If the file cannot be read or is invalid, returns (0, 0).
+    """
+    try:
+        with open('data/coefficients.json', 'r') as file:
+            parsed_data = json.load(file)
+    except (FileNotFoundError, json.JSONDecodeError, Exception):
+        return (0, 0)
+
+    theta0 = parsed_data.get('bias', 0)
+    theta1 = parsed_data.get('weight', 0)
+
+    return (theta0, theta1)
 
 
 def standard_scale_data(data: np.array) -> tuple:

@@ -2,7 +2,7 @@ import argparse
 import pandas as pd
 import numpy as np
 from batch_gradient_descent import BatchGradientDescent
-from utils import standard_scale_data, read_dataset, plot_regression_line, plot_original_data
+from utils import standard_scale_data, read_dataset, plot_regression_line, plot_original_data, get_coefficients
 import logger as logger
 log = logger.get_logger()
 
@@ -76,6 +76,7 @@ def main():
         # Instantiate Batch Gradient Descent Class
         log.info('Instanting the Batch Gradient Descent Class')
         bgd = BatchGradientDescent(X_scaled, y_scaled, len(X_scaled), 5000)
+        bgd.bias, bgd.weight = get_coefficients()
 
     except Exception as e:
         log.error(f'Error: {e}')
@@ -93,9 +94,13 @@ def main():
             log.info("Denormalizing coefficients")
             bgd.denormalize_coefficients(X_scaler, y_scaler)
 
+            log.info("Saving weights to data/coefficients.json")
+            bgd.save_coefficients()
+
             if bonus: 
                 # Plotting the regression line
                 plot_regression_line(X, y, bgd)
+
         except Exception as e:
             log.error(f'Error: {e}')
             return

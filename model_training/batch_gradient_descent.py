@@ -1,4 +1,5 @@
 import numpy as np
+import json
 from typing import Optional, List
 from sklearn.preprocessing import StandardScaler
 
@@ -97,6 +98,14 @@ class BatchGradientDescent:
             weight: [{self.weight}]
             bias: [{self.bias}]
         """)
+
+    def save_coefficients(self):
+        data = {
+            'weight': self.weight,
+            'bias': self.bias
+        }
+        with open('data/coefficients.json', 'w') as file:
+            json.dump(data, file)
 
 
     def mean_squared_error(self, y_true: List[float], y_pred: List[float]) -> float:
