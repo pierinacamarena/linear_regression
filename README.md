@@ -65,10 +65,14 @@ Copy
 ### Examples:
 
 1. Train the model and show bonus visualizations:
-python main.py data/car_data.csv --train True --bonus True
-Copy
+python main.py data/car_data.csv --mileage 8900 --train True --bonus True
+
 2. Predict price for a specific mileage using a trained model:
-python main.py data/car_data.csv --mileage 50000
+python main.py data/car_data.csv --mileage 50000 --train True
+
+1. Train the model and show bonus visualizations:
+python main.py data/car_data.csv --mileage 8900 --train True --bonus True
+
 ## File Structure
 
 - `main.py`: Main script to run the program
