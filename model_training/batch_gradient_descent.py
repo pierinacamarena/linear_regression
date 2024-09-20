@@ -24,7 +24,9 @@ class BatchGradientDescent:
 
 
     def fit(self) -> None :
-
+        """
+        Train the linear regression model using gradient descent.
+        """
         for _ in range(self.epochs):
             y_predicted = [self.weight * x + self.bias for x in self.features]
 
@@ -47,15 +49,39 @@ class BatchGradientDescent:
 
 
     def predictArray(self, X):
+        """
+        Predict outputs for an array of input features.
+
+        Args:
+            X: Array-like of input features.
+
+        Returns:
+            List of predicted values.
+        """
         return [self.weight * x + self.bias for x in X]
 
 
     def predict(self, mileage):
+        """
+        Predict output for a single input value.
+
+        Args:
+            mileage: Single input value.
+
+        Returns:
+            Predicted output value.
+        """
         return self.weight * mileage + self.bias
 
 
     def denormalize_coefficients(self, X_scaler: StandardScaler, y_scaler: StandardScaler):
+        """
+        Denormalize model coefficients using provided scalers.
 
+        Args:
+            X_scaler: StandardScaler for features.
+            y_scaler: StandardScaler for target.
+        """
         # Denormalize the weight
         denormalized_weight = (self.weight * y_scaler.scale_[0]) / X_scaler.scale_[0]
 
@@ -73,20 +99,35 @@ class BatchGradientDescent:
         """)
 
 
-
     def mean_squared_error(self, y_true: List[float], y_pred: List[float]) -> float:
+        """
+        Calculate mean squared error between true and predicted values.
+
+        Args:
+            y_true: List of true values.
+            y_pred: List of predicted values.
+
+        Returns:
+            Mean squared error.
+
+        Raises:
+            ValueError: If input lists have invalid lengths.
+        """
 
         if len(y_true) != len(y_pred):
-            raise ValueError("The lengths of y_true and y_pred must be equal")
-        
+            raise ValueError("mean_squared_error - The lengths of y_true and y_pred must be equal")
         n = len(y_true)
+        if n < 1:
+            raise ValueError("mean_squared_error - The lengths of y_true and y_pred must be greater than 0")
+
         squared_errors = [(y - y_hat) ** 2 for y, y_hat in zip(y_true, y_pred)]
         mse = sum(squared_errors) / n
         return mse
 
+
     def calculate_precission(self) -> None:
         """
-        Calculate the precision of the algorithm
+        Calculate and log the precision (MSE) of the model.
         """
         # Predict the prices after training
 
@@ -95,6 +136,6 @@ class BatchGradientDescent:
         # Calculate Mean Squared Error (MSE)
         mse = self.mean_squared_error(self.target, y_pred)
         log.trace(f"""
-        Algorithm's precision: [{mse}]
+        Algorithm's precision: [{round(mse, 2)}]
         """)
 
