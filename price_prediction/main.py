@@ -1,6 +1,9 @@
 import argparse
 import json
 
+from model_training.logger import get_logger
+log = get_logger()
+
 def get_coefficients() -> tuple:
     """
     Retrieves the bias (theta0) and weight (theta1) from a JSON file.
@@ -44,6 +47,7 @@ def calculate_price(mileage: int) -> float:
 
 def main():
     # Parse input arguments 
+
     parser = argparse.ArgumentParser(description="Receive mileag of a car")
     parser.add_argument('mileage', type=int, help="The mileage for a car")
     args = parser.parse_args()
@@ -51,7 +55,7 @@ def main():
     mileage = args.mileage
     
     car_price = calculate_price(mileage)
-    print(f'Car price for mileage {mileage} is {car_price}')
+    log.debug(f'Car price for mileage {mileage} is {car_price}')
 
 
 if __name__ == "__main__":

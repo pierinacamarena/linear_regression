@@ -33,7 +33,7 @@ logger.setLevel(logging.TRACE)
 
 
 handler = logging.StreamHandler()
-formatter = colorlog.ColoredFormatter("%(log_color)s%(name)s: %(asctime)s | %(levelname)s | %(filename)s:%(lineno)s | >>> %(message)s",
+formatter = colorlog.ColoredFormatter("%(log_color)s%(asctime)s | >>> %(message)s",
                                       datefmt="%Y-%m-%dT%H:%M:%SZ",
                                       log_colors={
                                           'TRACE': 'purple',

@@ -17,8 +17,7 @@ class BatchGradientDescent:
         self.target = target
         self.batch_size = batch_size
         self.epochs = epochs
-        log.trace(f"""
-        BEFORE TRAINING:
+        log.trace(f"""BEFORE TRAINING:
             weight: [{self.weight}]
             bias: [{self.bias}]
         """)
@@ -42,8 +41,7 @@ class BatchGradientDescent:
             self.weight -= tempWeight
             self.bias -= tempBias
 
-        log.trace(f"""
-        AFTER TRAINING:
+        log.trace(f"""AFTER TRAINING:
             weight: [{self.weight}]
             bias: [{self.bias}]
         """)
@@ -95,8 +93,7 @@ class BatchGradientDescent:
         self.weight = denormalized_weight
         self.bias = denormalized_bias
 
-        log.trace(f"""
-        AFTER DENORMALIZATION:
+        log.trace(f"""AFTER DENORMALIZATION:
             weight: [{self.weight}]
             bias: [{self.bias}]
         """)
@@ -146,7 +143,5 @@ class BatchGradientDescent:
 
         # Calculate Mean Squared Error (MSE)
         mse = self.mean_squared_error(self.target, y_pred)
-        log.trace(f"""
-        Algorithm's precision: [{round(mse, 2)}]
-        """)
+        log.trace(f""" Algorithm's precision: [{round(mse, 2)}]""")
 

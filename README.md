@@ -37,7 +37,7 @@ conda activate linear-regression
 Copy
 5. Install the required packages:
 conda install -c conda-forge colorlog=6.8.2 matplotlib=3.8.2 numpy=2.1.1 pandas=2.2.2 scikit-learn=1.3.2
-Copy
+
 ### Using pip
 
 If you prefer not to use Conda, you can install the dependencies using pip:
@@ -46,12 +46,14 @@ If you prefer not to use Conda, you can install the dependencies using pip:
 
 2. Install the required packages:
 pip install -r requirements.txt
-Copy
+
 ## Usage
 
 Run the program using the following command:
-python main.py [file_path] [options]
-Copy
+
+- For price prediction: python -m price_prediction.main [file_path]
+- For model training: python -m model_training.main --options [file_path]
+
 ### Arguments:
 
 - `file_path`: Path to the CSV file containing the dataset (required)
@@ -64,14 +66,18 @@ Copy
 
 ### Examples:
 
-1. Train the model and show bonus visualizations:
-python main.py data/car_data.csv --mileage 8900 --train True --bonus True
+1. Predict price for a specific mileage:
+- python -m price_prection.main 8900
 
-2. Predict price for a specific mileage using a trained model:
-python main.py data/car_data.csv --mileage 50000 --train True
+2. Train the model
+- python model_training/main.py --train True data/car_data.csv
 
-1. Train the model and show bonus visualizations:
-python main.py data/car_data.csv --mileage 8900 --train True --bonus True
+3. Train the model and get the prediction for a specific mileage, without bonus :
+- python model_training/main.py --mileage 8900 --train True  data/car_data.csv
+
+4. Train the model and get the prediction for a specific mileage, wiht bonus visualizations:
+- python model_training/main.py --mileage 8900 --train True --bonus True data/car_data.csv
+
 
 ## File Structure
 
